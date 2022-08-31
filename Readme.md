@@ -28,7 +28,7 @@ To run this project (i.e. locally), first, ensure you have installed mongod loca
 - Clone the repo and install all modules with:
 
 ```
-$ git clone
+$ git clone https://github.com/VictorChukwudi/CLI.git
 $ npm install
 ```
 
