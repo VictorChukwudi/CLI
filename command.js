@@ -2,6 +2,7 @@
 import { Command } from "commander";
 import inquirer from "inquirer";
 import { sendMail } from "./nodemailer.js";
+import chalkAnimation from "chalk-animation";
 import {
   saveMail,
   resendMail,
@@ -67,6 +68,7 @@ program
     inquirer.prompt(questions1).then((answers) => {
       saveMail(answers);
       sendMail(answers);
+      chalkAnimation.rainbow(`sending mail .........`);
     });
   });
 

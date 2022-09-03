@@ -1,6 +1,6 @@
 import { sendMail } from "./nodemailer.js";
 import sqlite3 from "sqlite3";
-
+import chalkAnimation from "chalk-animation";
 const db = new sqlite3.Database("mails.db");
 let sql = `CREATE TABLE IF NOT EXISTS mails (id INTEGER PRIMARY KEY AUTOINCREMENT, service TEXT, useremail VARCHAR, userpassword TEXT, recipient VARCHAR,subject TEXT, body TEXT)`;
 db.run(sql);
@@ -47,6 +47,7 @@ const resendMail = (id) => {
         subject: row.subject,
         text: row.body,
       });
+      chalkAnimation.rainbow(`sending mail .........`);
     }
   });
   db.close();

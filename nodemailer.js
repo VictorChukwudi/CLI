@@ -24,7 +24,9 @@ export const sendMail = ({
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.info("Email not sent. Check internet connectivty.");
+      console.info(
+        "Email not sent. Check internet connectivtiy and resend or create a new mail."
+      );
     } else {
       console.info(`Email to ${recipient} was sent.`);
     }
