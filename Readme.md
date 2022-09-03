@@ -16,7 +16,6 @@ The node modules used for this projects are
 
 - Commander
 - Inquirer
-- Mongoose
 - Nodemailer
 - Sqlite3
 
