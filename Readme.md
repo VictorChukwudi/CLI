@@ -24,7 +24,7 @@ with their versions shown in the package.json file.
 
 ## Setup
 
-To run this project (i.e. locally), first, ensure you have installed mongod locally on your machine or connect to a mongodb atlas cloud storage with the URI.
+To run this project (i.e. locally),
 
 - Clone the repo:
 
@@ -37,6 +37,8 @@ $ git clone https://github.com/VictorChukwudi/cli-mailer.git
 ```
 $ npm install
 $ npm run db
+$ npm link
+$ npm install -g
 ```
 
 - Finally to run and test the tool enter:
