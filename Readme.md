@@ -35,7 +35,6 @@ $ git clone https://github.com/VictorChukwudi/cli-mailer.git
 
 ```
 $ npm install
-$ npm run db
 $ npm link
 ```
 
