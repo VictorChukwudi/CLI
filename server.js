@@ -1,15 +1,12 @@
-import mongoose from "mongoose";
 import { sendMail } from "./nodemailer.js";
-import Mail from "./schema.js";
+import sqlite3 from "sqlite3";
 
-mongoose.Promise = global.Promise;
+const db = new sqlite3.Database("mails.db");
+let sql = `CREATE TABLE IF NOT EXISTS mails (id INTEGER PRIMARY KEY AUTOINCREMENT, service TEXT, useremail VARCHAR, userpassword TEXT, recipient VARCHAR,subject TEXT, body TEXT)`;
+db.run(sql);
 
-//Pass your mongodb uri conncection string either locally or from mongodb atlas
-mongoose.connect("mongodb://localhost:27017/projects", {
-  useNewUrlParser: true,
-});
-
-const saveMail = ({
+//Save mail function
+const saveMail = async ({
   service,
   userEmail,
   userPassword,
@@ -17,50 +14,82 @@ const saveMail = ({
   subject,
   text,
 }) => {
-  const mailService = service.toLowerCase();
-  new Mail({
-    service: mailService,
-    userEmail,
-    userPassword,
-    from: userEmail,
-    to: recipient,
-    subject,
-    text,
-  }).save();
-  mongoose.disconnect();
+  db.run(
+    "INSERT INTO mails(service, useremail, userpassword, recipient, subject, body) VALUES(?,?,?,?,?,?)",
+    [
+      `${service.toLowerCase()}`,
+      `${userEmail}`,
+      `${userPassword}`,
+      `${recipient}`,
+      `${subject}`,
+      `${text}`,
+    ],
+    (err) => {
+      if (err) {
+        console.info(err);
+      }
+    }
+  );
+  db.close();
 };
 
-const resendMail = async (_id) => {
-  const email = await Mail.findById(_id);
-  sendMail({
-    service: email.service,
-    userEmail: email.userEmail,
-    userPassword: email.userPassword,
-    recipient: email.to,
-    subject: email.subject,
-    text: email.text,
+//Resend Mail function
+const resendMail = (id) => {
+  db.get(`SELECT * FROM mails WHERE id=${id}`, (err, row) => {
+    if (err) {
+      console.info(err);
+    } else {
+      sendMail({
+        service: row.service,
+        userEmail: row.useremail,
+        userPassword: row.userpassword,
+        recipient: row.recipient,
+        subject: row.subject,
+        text: row.body,
+      });
+    }
   });
-  mongoose.disconnect();
+  db.close();
 };
-const deleteMail = async (_id) => {
-  await Mail.findByIdAndDelete(_id);
-  console.info(`Mail deleted`);
-  mongoose.disconnect();
+
+//Delete a specific mail function
+const deleteMail = (id) => {
+  db.run(`DELETE FROM mails WHERE id= ${id}`);
+  console.info(`mail with id: ${id} deleted successfully`);
+  db.close();
 };
-const deleteAllMail = async () => {
-  const allMail = await Mail.deleteMany();
-  console.info(`${allMail.deletedCount} mails deleted`);
-  mongoose.disconnect();
+
+//Delete all mails function
+const deleteAllMail = () => {
+  db.all("SELECT * FROM mails", (err, rows) => {
+    if (err) {
+      console.info(err);
+    } else {
+      db.run("DELETE FROM mails");
+      console.info(`${rows.length} mail(s) deleted`);
+    }
+  });
+  db.close();
 };
-const listMails = async () => {
-  const emails = await Mail.find().select([
-    "-__v",
-    "-userEmail",
-    "-userPassword",
-    "-service",
-  ]);
-  console.info(`${emails}
-${emails.length} mail(s) found`);
-  mongoose.disconnect();
+
+//List all mails function
+const listMails = () => {
+  db.all("SELECT * FROM mails", (err, rows) => {
+    if (err) {
+      console.info(err);
+    } else {
+      rows.forEach((row) => {
+        console.info({
+          id: row.id,
+          sender: row.useremail,
+          recipient: row.recipient,
+          subject: row.subject,
+          body: row.body,
+        });
+      });
+      console.info(`${rows.length} mail(s) found`);
+    }
+  });
+  db.close();
 };
 export { saveMail, resendMail, listMails, deleteMail, deleteAllMail };

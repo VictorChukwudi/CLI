@@ -9,7 +9,9 @@ import {
   deleteMail,
   deleteAllMail,
 } from "./server.js";
+
 const program = new Command();
+
 const questions1 = [
   {
     type: "input",
@@ -47,8 +49,8 @@ const questions1 = [
 const questions2 = [
   {
     type: "input",
-    name: "_id",
-    message: "Message _id from database?",
+    name: "id",
+    message: "Message id from mail list?",
   },
 ];
 program
@@ -80,14 +82,14 @@ program
   .description("resends an email")
   .alias("rnd")
   .action(() => {
-    inquirer.prompt(questions2).then((answers) => resendMail(answers._id));
+    inquirer.prompt(questions2).then((answers) => resendMail(answers.id));
   });
 program
   .command("delete")
   .description("deletes an email")
   .alias("del")
-  .action((_id) => {
-    inquirer.prompt(questions2).then((answers) => deleteMail(answers._id));
+  .action(() => {
+    inquirer.prompt(questions2).then((answers) => deleteMail(answers.id));
   });
 
 program

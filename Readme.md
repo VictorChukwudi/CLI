@@ -18,6 +18,7 @@ The node modules used for this projects are
 - Inquirer
 - Mongoose
 - Nodemailer
+- Sqlite3
 
 with their versions shown in the package.json file.
 
@@ -30,9 +31,9 @@ To run this project (i.e. locally), first, ensure you have installed mongod loca
 ```
 $ git clone https://github.com/VictorChukwudi/cli-mailer.git
 $ npm install
+$ npm run db
 ```
 
-- Connect mongodb database using the URI in the **server.js** file on line 8.
 - Finally to run and test the tool enter:
 
 ```
